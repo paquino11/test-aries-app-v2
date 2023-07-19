@@ -18,15 +18,25 @@ const agent = new Agent({
     config,
     dependencies: agentDependencies,
     modules: {
-      // Register the Askar module on the agent
       askar: new AskarModule({
         ariesAskar,
       }),
     },
   })
 
+const createNewInvitation = async (agent: Agent) => {
+    const outOfBandRecord = await agent.oob.createInvitation()
+
+    return {
+        invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: 'https://example.org' }),
+        outOfBandRecord,
+}
+}
+
 
 agent.registerOutboundTransport(new HttpOutboundTransport())
 agent.registerOutboundTransport(new WsOutboundTransport())
 
-export { agent };
+export { agent, createNewInvitation };
+
+
