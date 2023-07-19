@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import { agent, createNewInvitation } from './agent';
+import { agent, createNewInvitation, setupConnectionListener } from './agent';
 
 export default function App() {
   const [invitationUrl, setInvitationUrl] = useState('');
@@ -16,9 +16,13 @@ export default function App() {
 
   const run = async () => {
     console.log('Creating the invitation as Acme...');
-    const { invitationUrl } = await createNewInvitation(agent);
+    const { invitationUrl, outOfBandRecord } = await createNewInvitation(agent);
     console.log(invitationUrl);
     setInvitationUrl(invitationUrl);
+    console.log('Listening for connection changes...')
+    setupConnectionListener(agent, outOfBandRecord, () =>
+      console.log('We now have an active connection to use in the following tutorials')
+    )
   };
 
   return (
